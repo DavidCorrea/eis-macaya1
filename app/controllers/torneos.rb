@@ -8,7 +8,7 @@ Macaya::App.controllers :torneos do
 	get :new do
         asignar_equipos_a_agregar []
 	    @torneo = Torneo.new
-        @equipos = Equipo.all
+        @equipos = Equipo.all(:order => [:name.asc])
 	    render 'torneos/new'
 	end
 
@@ -31,10 +31,6 @@ Macaya::App.controllers :torneos do
 		@torneo = Torneo.new
         @torneo.name = (params[:torneo][:name])
         if params[:crear]
-            #equipos_a_agregar.each do | equipo_name |
-            #    @equipo = Equipo.first(:name => equipo_name)
-			#	 @torneo.equipos << @equipo
-			#end
 			if @torneo.save
 			  equipos_a_agregar.each do | equipo_name |
 				@equipo = Equipo.first(:name => equipo_name)

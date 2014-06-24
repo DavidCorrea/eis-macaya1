@@ -2,12 +2,7 @@ Macaya::App.controllers :partidos do
 
 	get :new do
         @torneo = torneo_actual
-        #@equipos = []
-        #@puntajes = Puntaje.all(:torneo_id => torneo_actual.id)
-        #@puntajes.each do | puntaje |
-		#	@equipo = Equipo.first(:id => puntaje.id)
-		#end
-	    @equipos = Equipo.all
+        @equipos = torneo_actual.equipos
 	    @partido = Partido.new
 	    render 'partidos/new'
 	end
@@ -15,7 +10,7 @@ Macaya::App.controllers :partidos do
 	post :create do
 		@torneo = torneo_actual
 		@partido = Partido.new
-		@equipos = Equipo.all
+		@equipos = torneo_actual.equipos
 		@equipo_local = Equipo.first(:name => params[:partido][:equipo_local])
         @equipo_visitante = Equipo.first(:name => params[:partido][:equipo_visitante])
         @fecha = (params[:partido][:fecha])
