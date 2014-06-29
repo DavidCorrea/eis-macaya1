@@ -1,5 +1,6 @@
 Given(/^no existen torneos$/) do
-  Torneo.all.destroy
+	Puntaje.destroy
+  Torneo.destroy
   visit '/'
 end
 

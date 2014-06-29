@@ -5,7 +5,7 @@ Given(/^que tengo ya creado el equipo "(.*?)"$/) do |nombre_equipo|
 end
 
 Given(/^^un torneo "(.*?)" con los equipos "(.*?)" y "(.*?)"$/) do |nombre_torneo, nombre_equipo1, nombre_equipo2|
-  Torneo.all.destroy
+  Torneo.destroy
   visit '/torneos/new'
   fill_in('torneo[name]', :with => nombre_torneo)
   select(nombre_equipo1, :from => 'equipo_select')
@@ -16,24 +16,21 @@ Given(/^^un torneo "(.*?)" con los equipos "(.*?)" y "(.*?)"$/) do |nombre_torne
 end
 
 Given(/^que no existan partidos$/) do
-  Partido.all.destroy
+  Partido.destroy
 end
 
 When(/^creo un partido para el "(.*?)" con fecha "(.*?)"$/) do |nombre_torneo, fecha|
   visit '/'
   click_link (nombre_torneo)
   click_link ('Agregar Partido') #ID del Button
-  # fill_in('partido[torneo]', :with => nombre_torneo)
   fill_in('partido[fecha]', :with => fecha)
 end
 
-When(/^defino equipo local "(.*?)"$/) do |equipoLocal|
-  # fill_in('partido[equipo_local]', :with => equipoLocal)  
+And(/^defino equipo local "(.*?)"$/) do |equipoLocal|
   select(equipoLocal, :from => 'equipo_local_select')
 end
 
 When(/^defino equipo visitante "(.*?)"$/) do |equipoVisitante|
-  # fill_in('partido[equipo_visitante]', :with => equipoVisitante)  
   select(equipoVisitante, :from => 'equipo_visitante_select')
 end
 
