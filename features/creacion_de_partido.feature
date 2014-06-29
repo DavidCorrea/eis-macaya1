@@ -11,18 +11,21 @@ Feature: Creación de Partidos
     When creo un partido para el "torneoA" con fecha "2014-07-20"
     And defino equipo local "equipo1"
     And defino equipo visitante "equipo2"
+    And defino fecha "1"
     And creo el partido
     Then se visualiza el partido en el fixture
 
-  Scenario: Creacion Fallida por partidos ya definidos
+  Scenario: Creacion Fallida por partido ya definido
     Given que no existan partidos
     When creo un partido para el "torneoA" con fecha "2014-07-20"
     And defino equipo local "equipo1"
     And defino equipo visitante "equipo2"
+    And defino fecha "1"
     And creo el partido
     Then se visualiza el partido en el fixture
     When creo un partido para el "torneoA" con fecha "2014-07-20"
     And defino equipo local "equipo1"
     And defino equipo visitante "equipo2"
+    And defino fecha "1"
     And creo el partido
     Then muestra un error que el partido ya existe
