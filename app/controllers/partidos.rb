@@ -16,7 +16,7 @@ Macaya::App.controllers :partidos do
         @fecha = (params[:partido][:fecha])
 
 		if !@equipo_local.nil? and !@equipo_visitante.nil?
-			if !@fecha.empty?
+#			if !@fecha.empty?
 				unless @equipo_local.eql? @equipo_visitante
 					@partido = Partido.new                
 		 			@partido.fecha = @fecha
@@ -34,10 +34,10 @@ Macaya::App.controllers :partidos do
 		    		flash.now[:error] = 'LOS EQUIPOS DEBEN SER DISTINTOS'
 		    		render 'partidos/new'	
 		    	end
-			else
-				flash.now[:error] = 'DEBE INGRESAR UNA FECHA'
-		    	render 'partidos/new'	
-			end 
+#			else
+#				flash.now[:error] = 'DEBE INGRESAR UNA FECHA'
+#		    	render 'partidos/new'	
+#			end 
 		else
 			flash.now[:error] = 'DEBE SELECCIONAR DOS EQUIPOS'
 		    render 'partidos/new'	

@@ -13,7 +13,7 @@ class Partido
 #  belongs_to :equipo_local, 'Equipo', :key => true
 #  belongs_to :equipo_visitante, 'Equipo', :key => true
 
-  validates_presence_of :fecha
+#  validates_presence_of :fecha
   validates_uniqueness_of :torneo, :scope => [:fecha, :id_equipo_local, :id_equipo_visitante]
 
   def nombre_equipo_local

@@ -13,7 +13,11 @@
 			<tr>
 				<% form_for(partido, url(:partidos, :update, :partido_id => partido.id)) do |p| %> 
 				<td align="center">
-					<%= partido.fecha %>
+					<% if partido.fecha.nil? %>
+						<%= p.text_field :resultado_equipo_local, :placeholder => 'yyyy-mm-dd', :class => 'input-mini' %>
+		            <% else %>
+						<%= partido.fecha %>
+					<% end %>					
 				</td>
 	  			<td align="center">
 					<%= partido.nombre_equipo_local %>
