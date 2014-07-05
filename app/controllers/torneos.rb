@@ -22,6 +22,8 @@ Macaya::App.controllers :torneos do
 	get :show, :with => :torneo_id do
 	    @torneo = Torneo.get(params[:torneo_id])
 	    asignar_torneo_actual @torneo
+        @fecha_actual = 1
+        @cantidad_de_fechas = torneo_actual.cantidad_de_fechas
 	    @partidos = Partido.all(:torneo_id => torneo_actual.id)
         render 'torneos/show'
 	end
@@ -30,23 +32,53 @@ Macaya::App.controllers :torneos do
         @equipos = Equipo.all
 		@torneo = Torneo.new
         @torneo.name = (params[:torneo][:name])
+        @torneo.tipo = (params[:torneo][:tipo])
         if params[:crear]
-			if @torneo.save
-			  equipos_a_agregar.each do | equipo_name |
-				@equipo = Equipo.first(:name => equipo_name)
-			  	@puntaje = Puntaje.new
-            	@puntaje.torneo = @torneo
-           	 	@puntaje.equipo = @equipo
-            	@puntaje.puntaje = 0
-           	 	@puntaje.save
-			  end
-              borrar_equipos_a_agregar
-			  flash[:success] = 'EL TORNEO FUE CREADO'
-			  redirect '/'
+            @cantidad_de_equipos = equipos_a_agregar.size
+            if @cantidad_de_equipos.odd?
+                if params[:torneo][:tipo].eql? 'IDA'
+					@torneo.cantidad_de_fechas = @cantidad_de_equipos
+				else
+					@torneo.cantidad_de_fechas = @cantidad_de_equipos * 2
+				end
 			else
-			  flash.now[:error] = 'NO SE PUDO CREAR EL TORNEO'
-			  render 'torneos/new'
-		    end
+				if params[:torneo][:tipo].eql?'IDA'
+					@torneo.cantidad_de_fechas = @cantidad_de_equipos - 1
+				else
+					@torneo.cantidad_de_fechas = (@cantidad_de_equipos - 1) * 2
+				end
+			end
+			#if @cantidad_de_equipos >= 2
+				if !@torneo.name.empty?
+                    if !@torneo.tipo.empty?
+						if @torneo.save
+						  equipos_a_agregar.each do | equipo_name |
+							@equipo = Equipo.first(:name => equipo_name)
+						  	@puntaje = Puntaje.new
+							@puntaje.torneo = @torneo
+					   	 	@puntaje.equipo = @equipo
+							@puntaje.puntaje = 0
+					   	 	@puntaje.save
+						  end
+						  borrar_equipos_a_agregar
+						  flash[:success] = 'EL TORNEO FUE CREADO'
+						  redirect '/'
+						else
+						  flash.now[:error] = 'NO SE PUDO CREAR EL TORNEO'
+						  render 'torneos/new'
+						end
+					else
+						flash.now[:error] = 'DEBE ELEGIR UN TIPO DE TORNEO'
+						  render 'torneos/new'
+					end
+				else
+					flash.now[:error] = 'DEBE INGRESAR UN NOMBRE'
+					render 'torneos/new'
+				end
+			#else
+			#	flash.now[:error] = 'DEBE ELEGIR AL MENOS DOS EQUIPOS'
+			#	render 'torneos/new'
+			#end
         else
             @equipo = Equipo.first(:name => params[:torneo][:equipos])
             if equipos_a_agregar.include? @equipo.name

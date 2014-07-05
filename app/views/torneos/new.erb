@@ -2,10 +2,11 @@
 		<table border="1" style="width:500px">
 		<h3 style="color:white">Creacion de Torneo</h3>
 			<% form_for(@torneo, '/torneos/create') do |t| %> 
-				<%= t.label :name %>
+				<%= t.label :name, :caption => 'Nombre' %>
 				<%= t.text_field :name %> <br>
                 <%= t.select(:equipos, :collection => @equipos, :fields => [:name], :include_blank => 'Seleccionar un equipo',:id => 'equipo_select') %> 
-				<%= t.submit 'Agregar Equipo', :name => 'agregar', :class => 'btn btn-secondary' %> <br>                                
+				<%= t.submit 'Agregar Equipo', :name => 'agregar', :class => 'btn btn-secondary' %> <br>        
+				<%= t.select(:tipo, :options => ['IDA', 'IDA Y VUELTA'], :include_blank => 'Seleccionar tipo de Torneo', :id => 'tipo_torneo_select') %> <br>                      
 				<%= t.submit 'Crear', :name => 'crear', :class => 'btn btn-primary' %>
 				<%= link_to "Volver", url(:home, :index), :class => 'btn btn-secondary' %>
 			<% end %>

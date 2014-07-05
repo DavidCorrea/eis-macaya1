@@ -9,6 +9,6 @@ migration 4, :create_puntajes do
   end
 
   down do
-    drop_table :partidos
+    drop_table :puntajes
   end
 end

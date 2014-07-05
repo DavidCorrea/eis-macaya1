@@ -2,12 +2,14 @@ Given(/^que tengo un torneo "(.*?)"$/) do |nombre_torneo|
   Torneo.all.destroy
   visit '/torneos/new'
   fill_in('torneo[name]', :with => nombre_torneo)
+  select('IDA', :from => 'tipo_torneo_select')
   click_button('Crear')
 end
 
 And(/^otro torneo "(.*?)"$/) do |nombre_torneo|
   visit '/torneos/new'
   fill_in('torneo[name]', :with => nombre_torneo)
+  select('IDA', :from => 'tipo_torneo_select')
   click_button('Crear')
 end
 

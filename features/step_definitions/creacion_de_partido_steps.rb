@@ -9,6 +9,7 @@ Given(/^^un torneo "(.*?)" con los equipos "(.*?)" y "(.*?)"$/) do |nombre_torne
   visit '/torneos/new'
   fill_in('torneo[name]', :with => nombre_torneo)
   select(nombre_equipo1, :from => 'equipo_select')
+  select('IDA', :from => 'tipo_torneo_select')
   click_button('Agregar Equipo')
   select(nombre_equipo2, :from => 'equipo_select')
   click_button('Agregar Equipo')

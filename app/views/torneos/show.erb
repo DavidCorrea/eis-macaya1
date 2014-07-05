@@ -1,5 +1,8 @@
 <div class="preamble" id="zen-preamble" role="article">		
-		<h3 style="color:white"> Partidos para <%= torneo_actual.name %> </h3>
+                <h3 style="color:white"> Torneo <%= torneo_actual.name %> | Tipo: <%= torneo_actual.tipo %></h3>
+		<h3 style="color:white"> Partidos </h3>
+        <% while @cantidad_de_fechas > 0 do %>
+		Fecha <%= @fecha_actual %> 
 		<table border="1" style="width:500px">
 			<tr>
 			  <th align="center">Fecha</th> 
@@ -49,6 +52,9 @@
 			</tr>
  			<% end %>
 		</table>
+        <% @fecha_actual = @fecha_actual + 1 %>
+		<% @cantidad_de_fechas = @cantidad_de_fechas - 1 %>
+		<% end %>
 		<br>
 		<%= link_to "Volver", url(:home, :index), :class => 'btn btn-secondary' %>
 </div>
