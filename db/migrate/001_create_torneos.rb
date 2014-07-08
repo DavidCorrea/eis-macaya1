@@ -4,7 +4,6 @@ migration 1, :create_torneos do
       column :id, Integer, :serial => true
       column :name, DataMapper::Property::String, :length => 255, :unique => true
       column :tipo, DataMapper::Property::String, :length => 255
-      column :cantidad_de_fechas, DataMapper::Property::Integer
     end
   end
 

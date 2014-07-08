@@ -24,7 +24,7 @@ When(/^creo un partido para el "(.*?)" con fecha "(.*?)"$/) do |nombre_torneo, f
   visit '/'
   click_link (nombre_torneo)
   click_link ('Agregar Partido') #ID del Button
-  fill_in('partido[fecha]', :with => fecha)
+  fill_in('partido[dia]', :with => fecha)
 end
 
 And(/^defino equipo local "(.*?)"$/) do |equipoLocal|

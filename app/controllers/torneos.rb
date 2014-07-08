@@ -23,8 +23,8 @@ Macaya::App.controllers :torneos do
 	    @torneo = Torneo.get(params[:torneo_id])
 	    asignar_torneo_actual @torneo
         @fecha_actual = 1
-        @cantidad_de_fechas = torneo_actual.cantidad_de_fechas
-	    @partidos = Partido.all(:torneo_id => torneo_actual.id)
+	    #@partidos = Partido.all(:fecha.torneo => torneo_actual.id)
+		@fechas = torneo_actual.fechas
         render 'torneos/show'
 	end
 
@@ -35,23 +35,23 @@ Macaya::App.controllers :torneos do
         @torneo.tipo = (params[:torneo][:tipo])
         if params[:crear]
             @cantidad_de_equipos = equipos_a_agregar.size
+            @cantidad_de_fechas_a_crear = 0
             if @cantidad_de_equipos.odd?
-                if params[:torneo][:tipo].eql? 'IDA'
-					@torneo.cantidad_de_fechas = @cantidad_de_equipos
-				else
-					@torneo.cantidad_de_fechas = @cantidad_de_equipos * 2
+                if !params[:torneo][:tipo].eql? 'IDA'
+					 @cantidad_de_fechas_a_crear = @cantidad_de_equipos * 2
 				end
 			else
 				if params[:torneo][:tipo].eql?'IDA'
-					@torneo.cantidad_de_fechas = @cantidad_de_equipos - 1
+					 @cantidad_de_fechas_a_crear = @cantidad_de_equipos - 1
 				else
-					@torneo.cantidad_de_fechas = (@cantidad_de_equipos - 1) * 2
+					 @cantidad_de_fechas_a_crear = (@cantidad_de_equipos - 1) * 2
 				end
 			end
 			#if @cantidad_de_equipos >= 2
 				if !@torneo.name.empty?
                     if !@torneo.tipo.empty?
 						if @torneo.save
+						  #Se crean las relaciones de puntaje
 						  equipos_a_agregar.each do | equipo_name |
 							@equipo = Equipo.first(:name => equipo_name)
 						  	@puntaje = Puntaje.new
@@ -59,7 +59,14 @@ Macaya::App.controllers :torneos do
 					   	 	@puntaje.equipo = @equipo
 							@puntaje.puntaje = 0
 					   	 	@puntaje.save
-						  end
+						  end   
+						  #Se crean las fechas  
+						  @numero_fecha = 1
+						  while  @cantidad_de_fechas_a_crear > 0 do
+								@fecha = Fecha.create(:numero => @numero_fecha, :torneo => @torneo)
+								@numero_fecha = @numero_fecha + 1
+                                 @cantidad_de_fechas_a_crear =  @cantidad_de_fechas_a_crear - 1
+						  end                    
 						  borrar_equipos_a_agregar
 						  flash[:success] = 'EL TORNEO FUE CREADO'
 						  redirect '/'

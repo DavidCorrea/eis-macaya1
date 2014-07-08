@@ -3,6 +3,12 @@ Macaya::App.controllers :partidos do
 	get :new do
         @torneo = torneo_actual
         @equipos = torneo_actual.equipos
+		### Se realiza esto por "problemas" con el Select. Debe arreglarse.
+		@fechas = []
+		torneo_actual.fechas.each do | f |
+			@fechas << f.numero.to_s
+		end
+		###
 	    @partido = Partido.new
 	    render 'partidos/new'
 	end
@@ -11,33 +17,35 @@ Macaya::App.controllers :partidos do
 		@torneo = torneo_actual
 		@partido = Partido.new
 		@equipos = torneo_actual.equipos
+        ### Se realiza esto por "problemas" con el Select. Debe arreglarse.
+		@fechas = []
+		torneo_actual.fechas.each do | f |
+			@fechas << f.numero.to_s
+		end
+		###
 		@equipo_local = Equipo.first(:name => params[:partido][:equipo_local])
         @equipo_visitante = Equipo.first(:name => params[:partido][:equipo_visitante])
-        @fecha = (params[:partido][:fecha])
+        @dia = (params[:partido][:dia])
+        @fecha = Fecha.first(:numero => params[:partido][:fecha], :torneo => torneo_actual)
 
 		if !@equipo_local.nil? and !@equipo_visitante.nil?
-#			if !@fecha.empty?
 				unless @equipo_local.eql? @equipo_visitante
 					@partido = Partido.new                
-		 			@partido.fecha = @fecha
+		 			@partido.dia = @dia
 		            @partido.id_equipo_local = @equipo_local.id
 		            @partido.id_equipo_visitante = @equipo_visitante.id
-					torneo_actual.partidos << @partido
-					if @partido.save
+					@fecha.partidos << @partido
+					if @partido.es_valido_para(torneo_actual) and @partido.save						
 		  				flash[:success] = 'PARTIDO AGREGADO EXITOSAMENTE'
 		  				redirect url(:torneos, :show, :torneo_id => torneo_actual.id)
 					else
-		  				flash.now[:error] = 'EL PARTIDO YA EXISTE'
+		  				flash.now[:error] = 'EL PARTIDO YA EXISTE PARA OTRA FECHA'
 		  				render 'partidos/new'
 		   			end
 		   		else
 		    		flash.now[:error] = 'LOS EQUIPOS DEBEN SER DISTINTOS'
 		    		render 'partidos/new'	
 		    	end
-#			else
-#				flash.now[:error] = 'DEBE INGRESAR UNA FECHA'
-#		    	render 'partidos/new'	
-#			end 
 		else
 			flash.now[:error] = 'DEBE SELECCIONAR DOS EQUIPOS'
 		    render 'partidos/new'	
@@ -56,14 +64,19 @@ Macaya::App.controllers :partidos do
 		@resultado_local_s = params[:partido][:resultado_equipo_local]
         @resultado_visitante_s = params[:partido][:resultado_equipo_visitante]
 
-		puts @resultado_local_s
+		@dia = (params[:partido][:dia])
 
 		if !@resultado_local_s.empty? and !@resultado_visitante_s.empty?
 			begin
 				@resultado_local = Integer @resultado_local_s
 				@resultado_visitante = Integer @resultado_visitante_s
 				if @resultado_visitante >= 0 and @resultado_local >= 0
-				    @partido.update(:resultado_local => @resultado_local, :resultado_visitante => @resultado_visitante)
+					# Se comprueba por el posible cambio en la vista
+					if @dia.nil?
+						@partido.update(:resultado_local => @resultado_local, :resultado_visitante => @resultado_visitante)
+					else
+				    	@partido.update(:resultado_local => @resultado_local, :resultado_visitante => @resultado_visitante, :dia => @dia)
+					end
 					if @resultado_local > @resultado_visitante
 				       	@puntaje_actual_local.update(:puntaje => (@puntaje_actual_local.puntaje + 3))
 				    elsif @resultado_local < @resultado_visitante
@@ -72,18 +85,15 @@ Macaya::App.controllers :partidos do
 				        @puntaje_actual_local.update(:puntaje => (@puntaje_actual_local.puntaje + 1))
 				        @puntaje_actual_visitante.update(:puntaje => (@puntaje_actual_visitante.puntaje + 1))
 					end
-					redirect url(:torneos, :show, :torneo_id => @partido.torneo.id)
 				else
 					flash[:error] = 'LOS VALORES DEBEN SER POSITIVOS'
-					redirect url(:torneos, :show, :torneo_id => @partido.torneo.id)
 				end
 			rescue
 				flash[:error] = 'DEBE INGRESAR VALORES NUMERICOS'
-				redirect url(:torneos, :show, :torneo_id => @partido.torneo.id)
 			end		
 		else
-			flash[:error] = 'DEBE COMPLETAR TODOS LOS CAMPOS'
-			redirect url(:torneos, :show, :torneo_id => @partido.torneo.id)
+			flash[:error] = 'DEBE COMPLETAR TODOS LOS CAMPOS'			
 		end
+		redirect url(:torneos, :show, :torneo_id => @partido.fecha.torneo.id)
 	end
 end

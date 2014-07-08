@@ -8,6 +8,7 @@ Feature: Agregar resultado a un partido no jugado
 		And creo un partido para el "torneoA" con fecha "2014-07-20"
 		And defino equipo local "equipo1"
 		And defino equipo visitante "equipo2"
+        And defino fecha "1"
         And creo el partido
 
 	Scenario: Creacion exitosa

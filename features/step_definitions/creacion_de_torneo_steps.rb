@@ -1,5 +1,7 @@
 Given(/^no existen torneos$/) do
   Puntaje.destroy
+  Partido.destroy
+  Fecha.destroy
   Torneo.destroy
   visit '/'
 end

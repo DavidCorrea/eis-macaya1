@@ -3,13 +3,16 @@
 		<h3 style="color:white">Creacion de Partido</h3>
 		<% form_for(@partido, '/partidos/create') do |p| %> 
 
-            <%= p.label :fecha, :caption => 'Fecha del partido: ' %> <br>
-			<%= p.text_field :fecha, :placeholder => 'yyyy-mm-dd' %> <br>
+            <%= p.label :dia, :caption => 'Fecha del partido: ' %> 
+			<%= p.text_field :dia, :placeholder => 'yyyy-mm-dd' %> <br>
+			
+			<%= p.label :fecha %> 
+			<%= p.select(:fecha, :options => @fechas, :fields => [:numero], :id => 'fecha_select')%> <br> 
 
-			<%= p.label :equipo_local %> <br>
+			<%= p.label :equipo_local %> 
 			<%= p.select(:equipo_local, :collection => @equipos, :fields => [:name], :include_blank => 'Seleccionar un equipo local',:id => 'equipo_local_select') %> <br>
 
-			<%= p.label :equipo_visitante %> <br>
+			<%= p.label :equipo_visitante %> 
 			<%= p.select(:equipo_visitante, :collection => @equipos, :fields => [:name], :include_blank => 'Seleccionar un equipo visitante',:id => 'equipo_visitante_select') %> <br>
                
 			<%= p.submit "Crear", :class => 'btn btn-primary' %>

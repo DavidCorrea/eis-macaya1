@@ -1,59 +1,57 @@
 <div class="preamble" id="zen-preamble" role="article">		
-                <h3 style="color:white"> Torneo <%= torneo_actual.name %> | Tipo: <%= torneo_actual.tipo %></h3>
-		<h3 style="color:white"> Partidos </h3>
-        <% while @cantidad_de_fechas > 0 do %>
-		Fecha <%= @fecha_actual %> 
-		<table border="1" style="width:500px">
-			<tr>
-			  <th align="center">Fecha</th> 
-			  <th align="center">Local</th>
-			  <th align="center">Resultado Local</th>
-			  <th align="center">Visitante</th>
-              <th align="center">Resultado Visitante</th>
-              <th align="center">Acciones</th>
-			</tr>
-			<% @partidos.each do | partido | %>
-			<tr>
-				<% form_for(partido, url(:partidos, :update, :partido_id => partido.id)) do |p| %> 
-				<td align="center">
-					<% if partido.fecha.nil? %>
-						<%= p.text_field :resultado_equipo_local, :placeholder => 'yyyy-mm-dd', :class => 'input-mini' %>
-		            <% else %>
-						<%= partido.fecha %>
-					<% end %>					
-				</td>
-	  			<td align="center">
-					<%= partido.nombre_equipo_local %>
-				</td>
-		                <td align="center">
-		                <% if partido.resultado_local.nil? %>
-							<%= p.text_field :resultado_equipo_local, :maxlength => 2, :class => 'input-mini' %>
-		                <% else %>
-							<%= partido.resultado_local %>
+        <h3 style="color:white"> Torneo <%= torneo_actual.name %> | Tipo: <%= torneo_actual.tipo %></h3>
+		<h3 style="color:white"> Partidos </h3> 
+		<% @fechas.each do | fecha | %>
+	 		Fecha <%= fecha.numero %>
+			<table border="1" style="width:500px">
+				<tr>
+				  <th align="center">Dia</th> 
+				  <th align="center">Local</th>
+				  <th align="center">Resultado Local</th>
+				  <th align="center">Visitante</th>
+		          <th align="center">Resultado Visitante</th>
+		          <th align="center">Acciones</th>
+				</tr>
+				<% fecha.partidos.each do | partido | %>
+				<tr>
+					<% form_for(partido, url(:partidos, :update, :partido_id => partido.id)) do |p| %> 
+					<td align="center">
+						<% if partido.dia.nil? %>
+							<%= p.text_field :dia, :placeholder => 'yyyy-mm-dd', :class => 'input-mini' %>
+				        <% else %>
+							<%= partido.dia %>
+						<% end %>					
+					</td>
+		  			<td align="center">
+						<%= partido.nombre_equipo_local %>
+					</td>
+				            <td align="center">
+				            <% if partido.resultado_local.nil? %>
+								<%= p.text_field :resultado_equipo_local, :maxlength => 2, :class => 'input-mini' %>
+				            <% else %>
+								<%= partido.resultado_local %>
+							<% end %>
+					</td>
+					<td align="center">
+						<%= partido.nombre_equipo_visitante %>
+					</td>
+				            <td align="center">
+				            <% if partido.resultado_visitante.nil? %>
+								<%= p.text_field :resultado_equipo_visitante, :maxlength => 2, :class => 'input-mini' %>
+				            <% else %>
+								<%= partido.resultado_visitante %>
+							<% end %>
+				            <td align="center">
+				                    <% if partido.resultado_local.nil? %>
+							<%= p.submit "Jugar", :class => 'btn btn-primary' %>
+				                    <% else %>
+							Ya jugado
 						<% end %>
-				</td>
-				<td align="center">
-					<%= partido.nombre_equipo_visitante %>
-				</td>
-		                <td align="center">
-		                <% if partido.resultado_visitante.nil? %>
-							<%= p.text_field :resultado_equipo_visitante, :maxlength => 2, :class => 'input-mini' %>
-		                <% else %>
-							<%= partido.resultado_visitante %>
-						<% end %>
-		                <td align="center">
-		                        <% if partido.resultado_local.nil? %>
-						<%= p.submit "Jugar", :class => 'btn btn-primary' %>
-		                        <% else %>
-						Ya jugado
-					<% end %>
-				</td>
- 			 	<% end %>
-			</tr>
- 			<% end %>
-		</table>
-        <% @fecha_actual = @fecha_actual + 1 %>
-		<% @cantidad_de_fechas = @cantidad_de_fechas - 1 %>
+					</td>
+	 			 	<% end %>
+				</tr>
+	 			<% end %>
+			</table>
 		<% end %>
 		<br>
 		<%= link_to "Volver", url(:home, :index), :class => 'btn btn-secondary' %>
